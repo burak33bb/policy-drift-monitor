@@ -10,122 +10,114 @@
     <title>policy drift monitor</title>
   </head>
   <body>
-    <main class="app-shell">
-      <aside class="sidebar">
+    <main class="page">
+      <header class="topbar">
         <div class="brand">
           <span class="mark">pd</span>
-          <strong>policydrift</strong>
+          <div>
+            <strong>policy drift monitor</strong>
+            <span>genlayer contract app</span>
+          </div>
         </div>
 
-        <nav class="nav-list" aria-label="project navigation">
-          <a href="#monitor" class="active">monitor</a>
-          <a id="contract-link" target="_blank" rel="noreferrer">contract</a>
-          <a
-            href="https://github.com/burak33bb/policy-drift-monitor"
-            target="_blank"
-            rel="noreferrer"
-          >
-            github
-          </a>
-        </nav>
-
-        <div class="sidebar-proof">
-          <span>network</span>
-          <strong id="network-label"></strong>
-        </div>
-        <div class="sidebar-proof">
-          <span>contract</span>
-          <code id="contract-address"></code>
-        </div>
-      </aside>
-
-      <section id="monitor" class="workspace">
-        <header class="toolbar">
+        <div class="wallet-cluster">
           <span id="status-pill" class="status-pill">ready</span>
-          <div class="wallet-cluster">
-            <span id="wallet-state" class="wallet-state">not connected</span>
-            <button id="connect-wallet" type="button">connect</button>
-            <button id="disconnect-wallet" class="ghost" type="button" hidden>
-              disconnect
-            </button>
-          </div>
-        </header>
+          <span id="wallet-state" class="wallet-state">not connected</span>
+          <button id="connect-wallet" type="button">connect</button>
+          <button id="disconnect-wallet" class="ghost" type="button" hidden>
+            disconnect
+          </button>
+        </div>
+      </header>
 
-        <section class="hero-card">
-          <div class="ambient-mark">pd</div>
-          <p class="eyebrow">live genlayer contract</p>
-          <h1>policy drift, checked onchain.</h1>
-          <p id="summary-text" class="hero-copy">
-            read the deployed sentinel, then submit a real wallet transaction.
+      <section class="task-panel">
+        <div class="task-copy">
+          <span class="eyebrow">active task</span>
+          <h1>check policy drift</h1>
+          <p id="summary-text">
+            call the deployed sentinel, read the latest result, and keep the
+            explorer proof visible.
           </p>
+        </div>
 
-          <div id="result-band" class="command-box">
-            <div>
-              <span>latest severity</span>
-              <strong id="severity-label">not checked</strong>
-              <small id="confidence-label">read contract state first.</small>
-            </div>
-            <div class="command-actions">
-              <button id="check-policy" type="button">check drift</button>
-              <button id="read-latest" class="secondary" type="button">read</button>
-            </div>
-          </div>
-        </section>
+        <div id="result-band" class="result-box">
+          <span>latest severity</span>
+          <strong id="severity-label">not checked</strong>
+          <small id="confidence-label">read contract state first.</small>
+        </div>
 
-        <section class="mini-grid">
-          <article>
-            <span>watch</span>
-            <strong id="watch-name">genlayer docs watch</strong>
-          </article>
-          <article>
-            <span>tracked page</span>
-            <a id="policy-url" target="_blank" rel="noreferrer"></a>
-          </article>
-          <article>
-            <span>baseline</span>
-            <code id="baseline-hash">loading</code>
-          </article>
-        </section>
+        <div class="action-row">
+          <button id="check-policy" type="button">check drift</button>
+          <button id="read-latest" class="secondary" type="button">read latest</button>
+        </div>
+      </section>
 
-        <section class="lower-grid">
-          <article class="panel">
-            <div class="panel-head">
-              <div>
-                <span>transaction</span>
-                <strong id="tx-title">idle</strong>
-              </div>
-              <a id="tx-link" target="_blank" rel="noreferrer" hidden>view tx</a>
-            </div>
-            <pre id="tx-output">connect a wallet to submit check_policy().</pre>
-          </article>
+      <section class="quick-grid">
+        <article>
+          <span>watch</span>
+          <strong id="watch-name">genlayer docs watch</strong>
+        </article>
+        <article>
+          <span>page</span>
+          <a id="policy-url" target="_blank" rel="noreferrer"></a>
+        </article>
+        <article>
+          <span>baseline</span>
+          <code id="baseline-hash">loading</code>
+        </article>
+      </section>
 
-          <article class="panel">
-            <div class="panel-head">
-              <div>
-                <span>activity</span>
-                <strong>local trail</strong>
-              </div>
-              <button id="clear-activity" class="ghost small" type="button">
-                clear
-              </button>
-            </div>
-            <div id="activity-list" class="activity-list"></div>
-          </article>
-        </section>
-
-        <section class="panel raw-panel">
+      <section class="work-grid">
+        <article class="panel">
           <div class="panel-head">
             <div>
-              <span>contract response</span>
-              <strong>latest check</strong>
+              <span>transaction</span>
+              <strong id="tx-title">idle</strong>
             </div>
-            <button id="copy-report" class="secondary small" type="button" disabled>
-              copy
+            <a id="tx-link" target="_blank" rel="noreferrer" hidden>view tx</a>
+          </div>
+          <pre id="tx-output">connect a wallet to submit check_policy().</pre>
+        </article>
+
+        <article class="panel">
+          <div class="panel-head">
+            <div>
+              <span>activity</span>
+              <strong>local trail</strong>
+            </div>
+            <button id="clear-activity" class="ghost small" type="button">
+              clear
             </button>
           </div>
-          <pre id="raw-output">no contract response yet.</pre>
-        </section>
+          <div id="activity-list" class="activity-list"></div>
+        </article>
       </section>
+
+      <section class="panel raw-panel">
+        <div class="panel-head">
+          <div>
+            <span>contract response</span>
+            <strong>latest check</strong>
+          </div>
+          <button id="copy-report" class="secondary small" type="button" disabled>
+            copy
+          </button>
+        </div>
+        <pre id="raw-output">no contract response yet.</pre>
+      </section>
+
+      <footer class="proof-strip">
+        <span id="network-label"></span>
+        <code id="contract-address"></code>
+        <a id="contract-link" target="_blank" rel="noreferrer">contract</a>
+        <a
+          href="https://github.com/burak33bb/policy-drift-monitor"
+          target="_blank"
+          rel="noreferrer"
+        >
+          github
+        </a>
+      </footer>
     </main>
     <script type="module" src="/src/main.js"></script>
   </body>
