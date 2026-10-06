@@ -5,145 +5,126 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta
       name="description"
-      content="PolicyDrift Monitor calls a deployed GenLayer Intelligent Contract to check public policy drift."
+      content="a GenLayer app that calls a deployed policy drift contract."
     />
-    <title>PolicyDrift Monitor</title>
+    <title>policy drift monitor</title>
   </head>
   <body>
-    <main class="shell">
-      <header class="topbar">
-        <div>
-          <p class="eyebrow">GenLayer Project</p>
-          <h1>PolicyDrift Monitor</h1>
+    <main class="app-shell">
+      <aside class="sidebar">
+        <div class="brand">
+          <span class="mark">pd</span>
+          <strong>policydrift</strong>
         </div>
-        <div class="wallet-cluster">
-          <span id="wallet-state" class="wallet-state">Not connected</span>
-          <button id="connect-wallet" type="button">Connect wallet</button>
-          <button id="disconnect-wallet" class="quiet" type="button" hidden>
-            Disconnect
-          </button>
+
+        <nav class="nav-list" aria-label="project navigation">
+          <a href="#monitor" class="active">monitor</a>
+          <a id="contract-link" target="_blank" rel="noreferrer">contract</a>
+          <a
+            href="https://github.com/burak33bb/policy-drift-monitor"
+            target="_blank"
+            rel="noreferrer"
+          >
+            github
+          </a>
+        </nav>
+
+        <div class="sidebar-proof">
+          <span>network</span>
+          <strong id="network-label"></strong>
         </div>
-      </header>
+        <div class="sidebar-proof">
+          <span>contract</span>
+          <code id="contract-address"></code>
+        </div>
+      </aside>
 
-      <section class="hero-grid">
-        <article class="primary-panel">
-          <div class="panel-head">
-            <div>
-              <p class="eyebrow">Live watch</p>
-              <h2 id="watch-name">GenLayer Docs Watch</h2>
-            </div>
-            <span id="status-pill" class="status-pill">Ready</span>
+      <section id="monitor" class="workspace">
+        <header class="toolbar">
+          <span id="status-pill" class="status-pill">ready</span>
+          <div class="wallet-cluster">
+            <span id="wallet-state" class="wallet-state">not connected</span>
+            <button id="connect-wallet" type="button">connect</button>
+            <button id="disconnect-wallet" class="ghost" type="button" hidden>
+              disconnect
+            </button>
           </div>
+        </header>
 
-          <div class="result-band" id="result-band">
-            <span class="result-label">Latest severity</span>
-            <strong id="severity-label">Not checked</strong>
-            <span id="confidence-label">Run a check or read contract state.</span>
-          </div>
-
-          <p id="summary-text" class="summary-text">
-            The app is connected to the deployed PolicyDriftSentinel contract and
-            can write a new drift check or read the latest accepted result.
+        <section class="hero-card">
+          <div class="ambient-mark">pd</div>
+          <p class="eyebrow">live genlayer contract</p>
+          <h1>policy drift, checked onchain.</h1>
+          <p id="summary-text" class="hero-copy">
+            read the deployed sentinel, then submit a real wallet transaction.
           </p>
 
-          <div class="action-row">
-            <button id="check-policy" type="button">Check policy drift</button>
-            <button id="read-latest" class="secondary" type="button">
-              Read latest
-            </button>
+          <div id="result-band" class="command-box">
+            <div>
+              <span>latest severity</span>
+              <strong id="severity-label">not checked</strong>
+              <small id="confidence-label">read contract state first.</small>
+            </div>
+            <div class="command-actions">
+              <button id="check-policy" type="button">check drift</button>
+              <button id="read-latest" class="secondary" type="button">read</button>
+            </div>
           </div>
+        </section>
 
-          <div class="meta-grid">
-            <div>
-              <span>Contract</span>
-              <code id="contract-address"></code>
-            </div>
-            <div>
-              <span>Network</span>
-              <strong id="network-label"></strong>
-            </div>
-            <div>
-              <span>Write path</span>
-              <strong>Wallet transaction</strong>
-            </div>
-            <div>
-              <span>Read path</span>
-              <strong>GenLayer SDK</strong>
-            </div>
-          </div>
-        </article>
-
-        <aside class="side-panel">
-          <p class="eyebrow">Contract proof</p>
-          <div class="proof-list">
-            <a id="contract-link" target="_blank" rel="noreferrer">
-              Open contract
-            </a>
-            <a
-              href="https://github.com/burak33bb/policy-drift-sentinel"
-              target="_blank"
-              rel="noreferrer"
-            >
-              Source repository
-            </a>
-            <a
-              href="https://github.com/burak33bb/policy-drift-sentinel/blob/main/contracts/policy_drift_sentinel.py"
-              target="_blank"
-              rel="noreferrer"
-            >
-              Contract source
-            </a>
-          </div>
-          <div class="watch-card">
-            <span>Tracked page</span>
+        <section class="mini-grid">
+          <article>
+            <span>watch</span>
+            <strong id="watch-name">genlayer docs watch</strong>
+          </article>
+          <article>
+            <span>tracked page</span>
             <a id="policy-url" target="_blank" rel="noreferrer"></a>
-          </div>
-          <div class="watch-card">
-            <span>Baseline fingerprint</span>
-            <code id="baseline-hash">Loading</code>
-          </div>
-        </aside>
-      </section>
+          </article>
+          <article>
+            <span>baseline</span>
+            <code id="baseline-hash">loading</code>
+          </article>
+        </section>
 
-      <section class="lower-grid">
-        <article class="activity-panel">
-          <div class="panel-head compact">
-            <div>
-              <p class="eyebrow">Transaction</p>
-              <h2 id="tx-title">Idle</h2>
+        <section class="lower-grid">
+          <article class="panel">
+            <div class="panel-head">
+              <div>
+                <span>transaction</span>
+                <strong id="tx-title">idle</strong>
+              </div>
+              <a id="tx-link" target="_blank" rel="noreferrer" hidden>view tx</a>
             </div>
-            <a id="tx-link" class="inline-link" target="_blank" rel="noreferrer" hidden>
-              View tx
-            </a>
-          </div>
-          <pre id="tx-output">Connect a wallet to submit a new policy drift check.</pre>
-        </article>
+            <pre id="tx-output">connect a wallet to submit check_policy().</pre>
+          </article>
 
-        <article class="activity-panel">
-          <div class="panel-head compact">
-            <div>
-              <p class="eyebrow">Recent local activity</p>
-              <h2>Session trail</h2>
+          <article class="panel">
+            <div class="panel-head">
+              <div>
+                <span>activity</span>
+                <strong>local trail</strong>
+              </div>
+              <button id="clear-activity" class="ghost small" type="button">
+                clear
+              </button>
             </div>
-            <button id="clear-activity" class="quiet small" type="button">
-              Clear
+            <div id="activity-list" class="activity-list"></div>
+          </article>
+        </section>
+
+        <section class="panel raw-panel">
+          <div class="panel-head">
+            <div>
+              <span>contract response</span>
+              <strong>latest check</strong>
+            </div>
+            <button id="copy-report" class="secondary small" type="button" disabled>
+              copy
             </button>
           </div>
-          <div id="activity-list" class="activity-list"></div>
-        </article>
-      </section>
-
-      <section class="raw-panel">
-        <div class="panel-head compact">
-          <div>
-            <p class="eyebrow">Contract response</p>
-            <h2>Raw latest check</h2>
-          </div>
-          <button id="copy-report" class="secondary small" type="button" disabled>
-            Copy
-          </button>
-        </div>
-        <pre id="raw-output">No contract response read yet.</pre>
+          <pre id="raw-output">no contract response yet.</pre>
+        </section>
       </section>
     </main>
     <script type="module" src="/src/main.js"></script>

@@ -70,15 +70,15 @@ readLatestCheck({ silent: true });
 async function connectWallet() {
   try {
     if (!window.ethereum) {
-      setTransactionState("Wallet missing", "Install MetaMask or another EIP-1193 wallet.");
+      setTransactionState("wallet missing", "install an eip-1193 wallet.");
       return false;
     }
 
-    setTransactionState("Network check", `Approve ${NETWORK_LABEL} in your wallet.`);
+    setTransactionState("network check", `approve ${NETWORK_LABEL.toLowerCase()} in your wallet.`);
     await switchToStudionet(window.ethereum);
 
     if (walletAddress) {
-      setTransactionState("Choose wallet", "Approve account reset, then pick the wallet to use.");
+      setTransactionState("choose wallet", "approve reset, then pick an account.");
       await revokeAccountPermission(window.ethereum);
     }
 
@@ -90,7 +90,7 @@ async function connectWallet() {
     return true;
   } catch (error) {
     setDisconnectedWallet();
-    setTransactionState("Wallet blocked", readableWalletError(error));
+    setTransactionState("wallet blocked", readableWalletError(error).toLowerCase());
     return false;
   }
 }
@@ -103,7 +103,7 @@ async function disconnectWallet() {
     }
   }
   setDisconnectedWallet();
-  setTransactionState("Disconnected", "Wallet cleared in this app. Connect again to pick another account.");
+  setTransactionState("disconnected", "wallet cleared. connect again to pick another account.");
 }
 
 async function checkPolicy() {
@@ -114,8 +114,8 @@ async function checkPolicy() {
     }
 
     nodes.checkPolicy.disabled = true;
-    setStatus("Signing", "muted");
-    setTransactionState("Wallet signing", "Confirm check_policy() in your wallet.");
+    setStatus("signing", "muted");
+    setTransactionState("wallet signing", "confirm check_policy() in your wallet.");
 
     const hash = await writeClient.writeContract({
       address: CONTRACT_ADDRESS,
@@ -126,10 +126,10 @@ async function checkPolicy() {
 
     const txUrl = `${EXPLORER_BASE_URL}/tx/${hash}`;
     showTxLink(txUrl);
-    setTransactionState("Submitted", `Transaction hash:\n${hash}`);
+    setTransactionState("submitted", `transaction hash:\n${hash}`);
     addActivity({
       title: "check_policy submitted",
-      status: "Submitted",
+      status: "submitted",
       hash,
       createdAt: new Date().toISOString(),
     });
@@ -140,12 +140,12 @@ async function checkPolicy() {
       fullTransaction: false,
     });
 
-    setTransactionState("Accepted", JSON.stringify(receipt, formatBigInt, 2));
-    updateActivity(hash, "Accepted");
+    setTransactionState("accepted", JSON.stringify(receipt, formatBigInt, 2));
+    updateActivity(hash, "accepted");
     await readLatestCheck();
   } catch (error) {
-    setStatus("Action failed", "danger");
-    setTransactionState("Action failed", error.message);
+    setStatus("action failed", "danger");
+    setTransactionState("action failed", error.message.toLowerCase());
   } finally {
     nodes.checkPolicy.disabled = false;
   }
@@ -161,7 +161,7 @@ async function readWatch() {
     });
     renderWatch(watch || {});
   } catch (error) {
-    nodes.baselineHash.textContent = "Read failed";
+    nodes.baselineHash.textContent = "read failed";
     nodes.summaryText.textContent = error.message;
   }
 }
@@ -169,7 +169,7 @@ async function readWatch() {
 async function readLatestCheck(options = {}) {
   try {
     if (!options.silent) {
-      setStatus("Reading", "muted");
+      setStatus("reading", "muted");
     }
 
     const result = await readClient.readContract({
@@ -183,7 +183,7 @@ async function readLatestCheck(options = {}) {
     renderLatest(report);
   } catch (error) {
     if (!options.silent) {
-      setStatus("Read failed", "danger");
+      setStatus("read failed", "danger");
       nodes.rawOutput.textContent = error.message;
     }
   }
@@ -192,9 +192,9 @@ async function readLatestCheck(options = {}) {
 async function copyLatestReport() {
   if (!latestReport) return;
   await navigator.clipboard.writeText(latestReport);
-  nodes.copyReport.textContent = "Copied";
+  nodes.copyReport.textContent = "copied";
   window.setTimeout(() => {
-    nodes.copyReport.textContent = "Copy";
+    nodes.copyReport.textContent = "copy";
   }, 1100);
 }
 
@@ -220,8 +220,8 @@ function handleAccountsChanged(accounts) {
 function handleChainChanged() {
   if (!walletAddress || !window.ethereum) return;
   switchToStudionet(window.ethereum).catch(() => {
-    setStatus("Wrong network", "danger");
-    setTransactionState("Wrong network", `Switch back to ${NETWORK_LABEL}.`);
+    setStatus("wrong network", "danger");
+    setTransactionState("wrong network", `switch back to ${NETWORK_LABEL.toLowerCase()}.`);
   });
 }
 
@@ -234,32 +234,32 @@ function setConnectedWallet(address) {
   });
   nodes.walletState.textContent = shortAddress(walletAddress);
   nodes.walletState.classList.add("connected");
-  nodes.connectWallet.textContent = "Change wallet";
+  nodes.connectWallet.textContent = "change wallet";
   nodes.disconnectWallet.hidden = false;
-  setTransactionState("Wallet ready", `Connected on ${NETWORK_LABEL}.`);
+  setTransactionState("wallet ready", `connected on ${NETWORK_LABEL.toLowerCase()}.`);
 }
 
 function setDisconnectedWallet() {
   walletAddress = "";
   writeClient = null;
-  nodes.walletState.textContent = "Not connected";
+  nodes.walletState.textContent = "not connected";
   nodes.walletState.classList.remove("connected");
-  nodes.connectWallet.textContent = "Connect wallet";
+  nodes.connectWallet.textContent = "connect";
   nodes.disconnectWallet.hidden = true;
 }
 
 function initializeUi() {
   nodes.contractAddress.textContent = CONTRACT_ADDRESS;
-  nodes.networkLabel.textContent = `${NETWORK_LABEL} ${NETWORK_CHAIN_ID}`;
+  nodes.networkLabel.textContent = `${NETWORK_LABEL.toLowerCase()} ${NETWORK_CHAIN_ID}`;
   nodes.contractLink.href = `${EXPLORER_BASE_URL}/address/${CONTRACT_ADDRESS}`;
   renderActivity();
 }
 
 function renderWatch(watch) {
-  nodes.watchName.textContent = watch.watch_name || "PolicyDriftSentinel";
+  nodes.watchName.textContent = (watch.watch_name || "policy drift sentinel").toLowerCase();
   nodes.policyUrl.href = watch.policy_url || "https://docs.genlayer.com/";
   nodes.policyUrl.textContent = watch.policy_url || "https://docs.genlayer.com/";
-  nodes.baselineHash.textContent = String(watch.baseline_hash || "No baseline read");
+  nodes.baselineHash.textContent = String(watch.baseline_hash || "no baseline read");
 }
 
 function renderLatest(report) {
@@ -268,24 +268,25 @@ function renderLatest(report) {
   nodes.copyReport.disabled = false;
 
   if (!report || Object.keys(report).length === 0) {
-    setStatus("No checks yet", "muted");
-    nodes.severityLabel.textContent = "No record";
-    nodes.confidenceLabel.textContent = "Submit the first contract check.";
+    setStatus("no checks yet", "muted");
+    nodes.severityLabel.textContent = "no record";
+    nodes.confidenceLabel.textContent = "submit the first check.";
     nodes.summaryText.textContent =
-      "The contract is deployed and readable, but no accepted check is stored yet.";
+      "contract is live. no accepted check is stored yet.";
     nodes.resultBand.dataset.severity = "empty";
     return;
   }
 
   const drift = report.drift || {};
-  const severity = drift.severity || "UNKNOWN";
+  const severity = drift.severity || "unknown";
   const confidence = drift.confidence;
-  nodes.severityLabel.textContent = severity;
+  nodes.severityLabel.textContent = severity.toLowerCase();
   nodes.confidenceLabel.textContent =
-    confidence === undefined ? "Confidence not returned" : `Confidence ${confidence}%`;
-  nodes.summaryText.textContent = drift.summary || "Contract returned a stored drift record.";
+    confidence === undefined ? "confidence not returned" : `confidence ${confidence}%`;
+  nodes.summaryText.textContent =
+    drift.summary?.toLowerCase() || "contract returned a stored drift record.";
   nodes.resultBand.dataset.severity = severity.toLowerCase();
-  setStatus("Contract read", severity === "HIGH" ? "danger" : "ok");
+  setStatus("contract read", severity === "HIGH" ? "danger" : "ok");
 
   if (report.id) {
     addActivity({
@@ -332,7 +333,7 @@ function updateActivity(hash, status) {
 
 function renderActivity() {
   if (!activity.length) {
-    nodes.activityList.innerHTML = '<div class="empty-state">No local activity yet.</div>';
+    nodes.activityList.innerHTML = '<div class="empty-state">no local activity yet.</div>';
     return;
   }
   nodes.activityList.replaceChildren(
@@ -349,7 +350,7 @@ function renderActivity() {
         link.href = `${EXPLORER_BASE_URL}/tx/${entry.hash}`;
         link.target = "_blank";
         link.rel = "noreferrer";
-        link.textContent = "Explorer";
+        link.textContent = "explorer";
         item.append(link);
       }
       return item;
@@ -380,7 +381,7 @@ function normalizeReport(result) {
     try {
       return JSON.parse(result);
     } catch {
-      return { drift: { severity: "UNKNOWN", summary: result } };
+      return { drift: { severity: "unknown", summary: result } };
     }
   }
   return result || {};
