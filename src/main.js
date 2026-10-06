@@ -1,6 +1,6 @@
 import { createClient } from "genlayer-js";
 import { studionet } from "genlayer-js/chains";
-import { TransactionStatus } from "genlayer-js/types";
+import { ExecutionResult, TransactionStatus } from "genlayer-js/types";
 import {
   CONTRACT_ADDRESS,
   EXPLORER_BASE_URL,
@@ -139,6 +139,19 @@ async function checkPolicy() {
       status: TransactionStatus.ACCEPTED,
       fullTransaction: false,
     });
+
+    if (
+      receipt.txExecutionResultName &&
+      receipt.txExecutionResultName !== ExecutionResult.FINISHED_WITH_RETURN
+    ) {
+      setStatus("execution failed", "danger");
+      setTransactionState(
+        "execution failed",
+        `${receipt.txExecutionResultName}\n\nstate was not updated.\n\n${JSON.stringify(receipt, formatBigInt, 2)}`,
+      );
+      updateActivity(hash, "execution failed");
+      return;
+    }
 
     setTransactionState("accepted", JSON.stringify(receipt, formatBigInt, 2));
     updateActivity(hash, "accepted");
