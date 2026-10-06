@@ -142,6 +142,7 @@ async function checkPolicy() {
 
     setTransactionState("accepted", JSON.stringify(receipt, formatBigInt, 2));
     updateActivity(hash, "accepted");
+    await wait(1800);
     await readLatestCheck();
   } catch (error) {
     setStatus("action failed", "danger");
@@ -172,14 +173,7 @@ async function readLatestCheck(options = {}) {
       setStatus("reading", "muted");
     }
 
-    const result = await readClient.readContract({
-      address: CONTRACT_ADDRESS,
-      functionName: "get_latest_check",
-      args: [],
-      stateStatus: "accepted",
-    });
-
-    const report = normalizeReport(result);
+    const report = await readLatestRecord();
     renderLatest(report);
   } catch (error) {
     if (!options.silent) {
@@ -272,7 +266,7 @@ function renderLatest(report) {
     nodes.severityLabel.textContent = "no record";
     nodes.confidenceLabel.textContent = "submit the first check.";
     nodes.summaryText.textContent =
-      "contract is live. no accepted check is stored yet.";
+      "contract is live. no stored check is readable yet.";
     nodes.resultBand.dataset.severity = "empty";
     return;
   }
@@ -296,6 +290,41 @@ function renderLatest(report) {
       createdAt: report.created_at || new Date().toISOString(),
     });
   }
+}
+
+async function readLatestRecord() {
+  const latest = normalizeReport(
+    await readClient.readContract({
+      address: CONTRACT_ADDRESS,
+      functionName: "get_latest_check",
+      args: [],
+      stateStatus: "accepted",
+    }),
+  );
+  if (latest && Object.keys(latest).length > 0) {
+    return latest;
+  }
+
+  const count = Number(
+    await readClient.readContract({
+      address: CONTRACT_ADDRESS,
+      functionName: "get_check_count",
+      args: [],
+      stateStatus: "accepted",
+    }),
+  );
+  if (!count) {
+    return {};
+  }
+
+  return normalizeReport(
+    await readClient.readContract({
+      address: CONTRACT_ADDRESS,
+      functionName: "get_check",
+      args: [count],
+      stateStatus: "accepted",
+    }),
+  );
 }
 
 function setStatus(label, tone) {
@@ -385,6 +414,12 @@ function normalizeReport(result) {
     }
   }
   return result || {};
+}
+
+function wait(ms) {
+  return new Promise((resolve) => {
+    window.setTimeout(resolve, ms);
+  });
 }
 
 function shortAddress(address) {
