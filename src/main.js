@@ -136,7 +136,7 @@ async function checkPolicy() {
 
     const receipt = await readClient.waitForTransactionReceipt({
       hash,
-      status: TransactionStatus.ACCEPTED,
+      status: TransactionStatus.FINALIZED,
       fullTransaction: false,
     });
 
@@ -153,8 +153,8 @@ async function checkPolicy() {
       return;
     }
 
-    setTransactionState("accepted", JSON.stringify(receipt, formatBigInt, 2));
-    updateActivity(hash, "accepted");
+    setTransactionState("finalized", JSON.stringify(receipt, formatBigInt, 2));
+    updateActivity(hash, "finalized");
     await wait(1800);
     await readLatestCheck();
   } catch (error) {
