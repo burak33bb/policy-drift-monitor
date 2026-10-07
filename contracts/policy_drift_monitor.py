@@ -50,9 +50,10 @@ class PolicyDriftMonitor(gl.Contract):
         self.check_count = u256(0)
 
     @gl.public.write
-    def check_policy(self) -> typing.Any:
-        current_text = _normalize_text(gl.get_webpage(self.policy_url, mode="text"))
-        current_excerpt = current_text[:1000]
+    def check_policy(self, current_excerpt: str) -> typing.Any:
+        current_excerpt = _normalize_text(current_excerpt)[:1000]
+        if len(current_excerpt) < 20:
+            raise ValueError("Current excerpt is too short.")
         current_hash = _fingerprint(current_excerpt)
         changed = current_hash != self.baseline_hash
 

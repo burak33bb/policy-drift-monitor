@@ -3,6 +3,7 @@ import { studionet } from "genlayer-js/chains";
 import { ExecutionResult, TransactionStatus } from "genlayer-js/types";
 import {
   CONTRACT_ADDRESS,
+  CURRENT_EXCERPT,
   EXPLORER_BASE_URL,
   NETWORK_CHAIN_ID,
   NETWORK_LABEL,
@@ -120,7 +121,7 @@ async function checkPolicy() {
     const hash = await writeClient.writeContract({
       address: CONTRACT_ADDRESS,
       functionName: "check_policy",
-      args: [],
+      args: [CURRENT_EXCERPT],
       value: BigInt(0),
     });
 

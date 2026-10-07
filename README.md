@@ -2,7 +2,7 @@
 
 PolicyDrift Monitor is a GenLayer project app for the deployed `PolicyDriftSentinel` Intelligent Contract.
 
-The app connects a browser wallet to GenLayer Studionet, writes `check_policy()` to the deployed contract, reads `get_watch()` and `get_latest_check()` through GenLayerJS, and links users to the contract and transaction evidence in Explorer.
+The app connects a browser wallet to GenLayer Studionet, writes `check_policy(current_excerpt)` to the deployed contract, reads `get_watch()` and `get_latest_check()` through GenLayerJS, and links users to the contract and transaction evidence in Explorer.
 
 ## Live Contract
 
@@ -14,7 +14,7 @@ The app connects a browser wallet to GenLayer Studionet, writes `check_policy()`
 
 - The frontend directly calls the deployed GenLayer contract.
 - Wallet flow switches or adds GenLayer Studionet before writes.
-- The primary action submits a real `check_policy()` transaction.
+- The primary action submits a real `check_policy(current_excerpt)` transaction.
 - Read panels query accepted contract state and render the latest drift report.
 - Explorer links are shown for both contract and transactions.
 

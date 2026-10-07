@@ -3,3 +3,5 @@ export const EXPLORER_BASE_URL = "https://explorer-studio.genlayer.com";
 export const NETWORK_LABEL = "GenLayer Studionet";
 export const NETWORK_CHAIN_ID = "61999";
 export const NETWORK_RPC = "https://studio.genlayer.com/api";
+export const CURRENT_EXCERPT =
+  "GenLayer is a blockchain with AI-powered smart contracts that natively connect to the internet and understand both code and natural language.";
