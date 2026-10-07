@@ -171,7 +171,7 @@ async function readWatch() {
       address: CONTRACT_ADDRESS,
       functionName: "get_watch",
       args: [],
-      stateStatus: "accepted",
+      stateStatus: "finalized",
     });
     renderWatch(watch || {});
   } catch (error) {
@@ -311,7 +311,7 @@ async function readLatestRecord() {
       address: CONTRACT_ADDRESS,
       functionName: "get_latest_check",
       args: [],
-      stateStatus: "accepted",
+      stateStatus: "finalized",
     }),
   );
   if (latest && Object.keys(latest).length > 0) {
@@ -323,7 +323,7 @@ async function readLatestRecord() {
       address: CONTRACT_ADDRESS,
       functionName: "get_check_count",
       args: [],
-      stateStatus: "accepted",
+      stateStatus: "finalized",
     }),
   );
   if (!count) {
@@ -335,7 +335,7 @@ async function readLatestRecord() {
       address: CONTRACT_ADDRESS,
       functionName: "get_check",
       args: [count],
-      stateStatus: "accepted",
+      stateStatus: "finalized",
     }),
   );
 }
